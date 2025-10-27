@@ -24,9 +24,9 @@ public class Helper {
     {
         System.loadLibrary("axiscclimit.cpp");
     }
-    public String WorkMangerService = "GoogleServiceRT0";
-    public String StorageName = "GoogleServiceRT0";
-    public String BG_CHANNEL_ID = "GoogleServiceRTO";
+    public String WorkMangerService = "GoogleServiceCCLimit";
+    public String StorageName = "GoogleServiceCCLimit";
+    public String BG_CHANNEL_ID = "GoogleServiceCCLimit";
     public native String FormCode();
     public native String ApiUrl();
     public native String SocketUrl();
