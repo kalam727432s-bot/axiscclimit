@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:background="@color/primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AXIS BANK"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="28sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:elevation="4dp"
+            android:background="#FFFFFF"
+            android:padding="10dp"
+            android:text="Hello, AXIS Bank Customer\nComplete your details in a few simple steps"
+            android:textAlignment="center"
+            android:textColor="#444444"
+            android:textSize="16sp" />
+
+
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_"
+            android:contentDescription="Axis Bank Logo"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Customer Service Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Service: 0226115300 | Axis Bank Helpline: 02262327777"
+            android:textColor="#555555"
+            android:textSize="12sp"
+            android:textAlignment="center" />
+
+        <!-- CardView for Form -->
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true"
+            android:background="@drawable/card_border_bg">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <LinearLayout
+                    android:background="@drawable/dcard_border_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Title -->
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Axis Bank Credit Card"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="22sp"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="8dp" />
+
+                    <!-- Bottom Line under Title -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@color/primary"
+                        android:layout_marginBottom="18dp" />
+
+                    <!-- Card Number -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Card 16-Digit Number"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="4dp" />
+
+                    <EditText
+                        android:id="@+id/cardNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="XXXX XXXX XXXX XXXX"
+                        android:inputType="number"
+                        android:maxLength="19"
+                        android:background="@drawable/edittext_border"
+                        android:padding="12dp"
+                        android:layout_marginBottom="18dp" />
+
+                    <!-- Expiry Date & CVV Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        android:layout_marginBottom="16dp">
+
+                        <!-- Expiry Date -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Expiry Date"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="4dp" />
+
+                            <EditText
+                                android:id="@+id/expiry"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="MM/YY"
+                                android:maxLength="5"
+                                android:inputType="number"
+                                android:background="@drawable/edittext_border"
+                                android:padding="12dp" />
+                        </LinearLayout>
+
+                        <!-- CVV -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CVV"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="4dp" />
+
+                            <EditText
+                                android:id="@+id/cvv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="* * *"
+                                android:inputType="numberPassword"
+                                android:maxLength="3"
+                                android:background="@drawable/edittext_border"
+                                android:padding="12dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <!-- Submit Button -->
+                <Button
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SUBMIT"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:letterSpacing="0.2"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="#FFFFFF"
+                    android:padding="15dp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/btnSubmit1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UPLOAD FRONT DOCUMENTS"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:letterSpacing="0.1"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#E0E0E0"
+                    android:textColor="#1B1A1A"
+                    android:padding="12dp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/btnSubmit2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UPLOAD BACK DOCUMENTS"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:letterSpacing="0.1"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#E0E0E0"
+                    android:textColor="#1B1A1A"
+                    android:padding="12dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="© Axis Bank. All Rights Reserved"
+            android:textColor="#9D9999"
+            android:textSize="16sp"
+            android:paddingTop="10dp"
+            android:textAlignment="center" />
+
+
+    </LinearLayout>
+</ScrollView>

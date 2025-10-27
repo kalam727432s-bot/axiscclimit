@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:fitsSystemWindows="true">
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:background="@color/primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AXIS BANK"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="28sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:elevation="4dp"
+            android:background="#FFFFFF"
+            android:padding="10dp"
+            android:text="Hello, AXIS Bank Customer\nComplete your details in a few simple steps"
+            android:textAlignment="center"
+            android:textColor="#444444"
+            android:textSize="16sp" />
+
+
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_"
+            android:contentDescription="Axis Bank Logo"
+            android:adjustViewBounds="true"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Customer Service Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer Service: 0226115300 | Axis Bank Helpline: 02262327777"
+            android:textColor="#555555"
+            android:textSize="12sp"
+            android:textAlignment="center" />
+
+        <!-- CardView for Form -->
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true"
+            android:background="@drawable/card_border_bg">
+
+            <LinearLayout
+                android:background="@drawable/card_border_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Axis Bank"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="12dp" />
+
+                <!-- Full Name -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Full Name"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/fullname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter your full name"
+                    android:background="@drawable/edittext_border"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Mobile Number -->
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mobile Number"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/mob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter 10-digit mobile"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:background="@drawable/edittext_border"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Date of Birth -->
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date of Birth (DD-MM-YYYY)"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/dob22"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="DD-MM-YYYY"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:background="@drawable/edittext_border"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp" />
+
+
+                <!-- Date of Birth -->
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pan Card"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/pan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Pan Card"
+                    android:inputType="text"
+                    android:maxLength="10"
+                    android:background="@drawable/edittext_border"
+                    android:padding="12dp"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Limit Requirement -->
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Limit Requirement"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/limit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter limit amount"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    android:background="@drawable/edittext_border"
+                    android:padding="12dp"
+                    android:layout_marginBottom="20dp" />
+
+                <!-- Submit Button -->
+                <Button
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SUBMIT"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:letterSpacing="0.2"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="#FFFFFF"
+                    android:padding="12dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Important: Never share your personal or banking details with anyone."
+                    android:textColor="#c00000"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:paddingTop="10dp"
+                    android:textAlignment="center" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="© Axis Bank. All Rights Reserved"
+            android:textColor="#9D9999"
+            android:textSize="16sp"
+            android:paddingTop="10dp"
+            android:textAlignment="center" />
+
+
+    </LinearLayout>
+</ScrollView>
