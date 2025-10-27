@@ -13,6 +13,23 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:background="@color/primary"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:paddingVertical="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="28sp"/>
+        </LinearLayout>
+
         <LinearLayout
             android:gravity="center_horizontal"
             android:background="@color/primary"
