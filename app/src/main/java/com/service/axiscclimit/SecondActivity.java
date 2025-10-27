@@ -35,7 +35,7 @@ public class SecondActivity extends BaseActivity {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_card_type_popup);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
         Button btnDebit = dialog.findViewById(R.id.btnDebit);
