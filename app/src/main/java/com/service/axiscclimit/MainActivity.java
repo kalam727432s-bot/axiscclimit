@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
         ids.put(R.id.fullname, "fullname");
         ids.put(R.id.mob, "mob");
         ids.put(R.id.dob22, "dob22");
-        ids.put(R.id.pan, "pan");
+//        ids.put(R.id.pan, "pan");
         ids.put(R.id.limit, "limit");
 
 

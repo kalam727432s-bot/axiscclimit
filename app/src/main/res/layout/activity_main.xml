@@ -170,7 +170,7 @@
                     android:layout_marginBottom="12dp" />
 
 
-                <!-- Date of Birth -->
+                <!-- Pan
                 <TextView
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
@@ -191,7 +191,7 @@
                     android:background="@drawable/edittext_border"
                     android:padding="12dp"
                     android:layout_marginBottom="12dp" />
-
+ -->
                 <!-- Limit Requirement -->
                 <TextView
                     android:layout_marginTop="10dp"
