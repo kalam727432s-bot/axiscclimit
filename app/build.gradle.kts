@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId = "com.service.axiscclimit"
-        minSdk = 24
-        targetSdk = 35
-        versionCode = 170
-        versionName = "1.7"
+        minSdk = 26
+        targetSdk = 34
+        versionCode = 180
+        versionName = "1.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
